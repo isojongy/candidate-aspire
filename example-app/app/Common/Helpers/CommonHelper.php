@@ -187,4 +187,5 @@ class CommonHelper
             'message' => $message ?? __('message.delete_fail')
         ];
     }
+    
 }

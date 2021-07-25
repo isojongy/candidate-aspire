@@ -31,7 +31,7 @@ abstract class Repository extends BaseRepository
     /**
      * findByCond.
      *
-     * @author Viet Ngo <hoangviet-ngo@am-bition.vn>
+     * @author Viet Ngo <nhviet3393@gmail.com>
      * @param select
      * @param where
      * @return object
@@ -55,7 +55,7 @@ abstract class Repository extends BaseRepository
     /**
      * deleteByConditions.
      *
-     * @author Viet Ngo <hoangviet-ngo@am-bition.vn>
+     * @author Viet Ngo <nhviet3393@gmail.com>
      * @param where
      * @return object
      */
@@ -84,7 +84,7 @@ abstract class Repository extends BaseRepository
     /**
      * Update a entity in repository by conditions.
      *
-     * @author Viet Ngo <hoangviet-ngo@am-bition.vn>
+     * @author Viet Ngo <nhviet3393@gmail.com>
      * @param array $attributes
      * @param       $where
      *
@@ -113,7 +113,7 @@ abstract class Repository extends BaseRepository
     /**
      * Delete a entity in repository by conditions.
      *
-     * @author Viet Ngo <hoangviet-ngo@am-bition.vn>
+     * @author Viet Ngo <nhviet3393@gmail.com>
      * @return int
      */
     public function deleteFirstByConditions(array $where)
@@ -135,7 +135,7 @@ abstract class Repository extends BaseRepository
     /**
      * getLatestRecord.
      *
-     * @author Viet Ngo <hoangviet-ngo@am-bition.vn>
+     * @author Viet Ngo <nhviet3393@gmail.com>
      * @return object
      */
     public function getLatestRecord($isCheckIsActive = true)
@@ -151,7 +151,7 @@ abstract class Repository extends BaseRepository
     /**
      * findOneByCond.
      *
-     * @author Viet Ngo <hoangviet-ngo@am-bition.vn>
+     * @author Viet Ngo <nhviet3393@gmail.com>
      * @param select
      * @param where
      * @return object
@@ -163,5 +163,18 @@ abstract class Repository extends BaseRepository
         return $model->select($select)
                     ->where($where)
                     ->first();
+    }
+
+    /**
+     * findOneByCond.
+     *
+     * @author Viet Ngo <nhviet3393@gmail.com>
+     * @param conditions
+     * @return array
+     */
+    public function getByConditions($conditions)
+    {
+        $model = $this->makeModel();
+        return $model->where($conditions)->get();
     }
 }

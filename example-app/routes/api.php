@@ -21,11 +21,28 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group([
     'middleware' => 'api',
     'namespace' => 'App\Http\Controllers',
-    'prefix' => 'auth'
-], function ($router) {
-    Route::post('register', 'AuthController@register');
-    Route::post('login', 'AuthController@login');
-    Route::post('logout', 'AuthController@logout');
-    Route::post('refresh', 'AuthController@refresh');
-    Route::get('me', 'AuthController@me');
+], function () {
+    Route::group(['prefix' => 'auth'], function(){
+        Route::post('register', 'AuthController@register');
+        Route::post('login', 'AuthController@login');
+        Route::post('logout', 'AuthController@logout');
+        Route::post('refresh', 'AuthController@refresh');
+        Route::get('me', 'AuthController@me');
+    });
+
+    Route::group(['prefix' => 'loans'], function(){
+        Route::post('create', 'LoanController@postCreate');
+        Route::put('update', 'LoanController@putUpdate');
+        Route::delete('delete', 'LoanController@delete');
+        Route::get('read/{id}', 'LoanController@getRead');
+        Route::get('list', 'LoanController@getList');
+    });
+
+    Route::group(['prefix' => 'payments'], function(){
+        Route::post('create', 'PaymentController@postCreate');
+        Route::put('update', 'PaymentController@putUpdate');
+        Route::delete('delete', 'PaymentController@delete');
+        Route::get('read/{id}', 'PaymentController@getRead');
+        Route::get('list', 'PaymentController@getList');
+    });
 });

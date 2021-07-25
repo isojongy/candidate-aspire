@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Lottery extends Model
+class Payment extends Model
 {
+    use SoftDeletes;
 
     /**
      * The attributes that aren't mass assignable.
@@ -19,13 +21,15 @@ class Lottery extends Model
      *
      * @var string
      */
-    protected $table = 'lotteries';
+    protected $table = 'payments';
+
+    protected $hidden = ['deleted_at'];
 
     /**
-     * user relationship.
+     * gift relationship.
      */
-    public function user()
+    public function loan()
     {
-        return $this->belongsTo(User::class, 'user_phone', 'phone');
+        return $this->belongsTo(Loan::class);
     }
 }
