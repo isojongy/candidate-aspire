@@ -30,34 +30,69 @@ class LoanService
      */
     public function create($request)
     {
-        $request['user_id'] = Auth::user()->id;
+        try {
+            $request['user_id'] = Auth::user()->id;
 
-        $loanPlan = $this->loanPlanRepository->find($request['loan_plan_id']);
-        if(empty($loanPlan)){
-            return false;
+            $loanPlan = $this->loanPlanRepository->find($request['loan_plan_id']);
+            if (empty($loanPlan)) {
+                return [
+                    'res' => [
+                        'success' => true,
+                        'message' => 'Loan plan is not found',
+                    ],
+                    'code' => 400,
+                ];
+            }
+            // dd($loanPlan);
+
+            $request['interest_rate'] = $loanPlan->interest_rate;
+            $request['penalty_rate'] = $loanPlan->penalty_rate;
+            $request['total_amount'] = $request['remain_amount'] = round($request['origin_amount'] * (1 + $loanPlan->interest_rate / 100));
+            $request['daily_amount'] = round($request['total_amount'] / 365);
+            $request['penalty_amount'] = round($request['daily_amount'] * ($loanPlan->penalty_rate / 100));
+            // dd($request);
+            $record = $this->loanRepository->create($request);
+            return [
+                'res' => [
+                    'success' => true,
+                    'data' => $record,
+                ],
+                'code' => 200,
+            ];
         }
-        // dd($loanPlan);
-
-        $request['interest_rate'] = $loanPlan->interest_rate;
-        $request['penalty_rate'] = $loanPlan->penalty_rate;
-        $request['total_amount'] = $request['remain_amount'] = round($request['origin_amount'] * (1 + $loanPlan->interest_rate / 100));
-        $request['daily_amount'] = round($request['total_amount'] / 365);
-        $request['penalty_amount'] = round($request['daily_amount'] * ($loanPlan->penalty_rate / 100));
-        // dd($request);
-        $record = $this->loanRepository->create($request);
-        return $record;
+        catch(Exception $ex){
+            return [
+                'res' => [
+                    'success' => true,
+                    'message' => $ex->getMessage(),
+                ],
+                'code' => 500,
+            ];
+        }
     }
 
     /**
-     * list
+     * read
      */
     public function read($id){
         try {
             $record = $this->loanRepository->find($id);
-            return $record;
+            return [
+                'res' => [
+                    'success' => true,
+                    'data' => $record,
+                ],
+                'code' => 200,
+            ];
         }
         catch (Exception $ex){
-            return false;
+            return [
+                'res' => [
+                    'success' => false,
+                    'message' => $ex->getMessage(),
+                ],
+                'code' => 500,
+            ];
         }
     }
 
@@ -70,7 +105,13 @@ class LoanService
             'user_id' => $userId,
         ];
         $records = $this->loanRepository->getByConditions($conditions);
-        return $records;
+        return [
+            'res' => [
+                'success' => true,
+                'data' => $records,
+            ],
+            'code' => 200,
+        ];
     }
 
 }

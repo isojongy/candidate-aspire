@@ -38,11 +38,23 @@ class PaymentService
         try{
             $loan = $this->loanRepository->find($request['loan_id']);
             if(empty($loan)){
-                return false;
+                return [
+                    'res' => [
+                        'success' => false,
+                        'message' => 'This loan is not found',
+                    ],
+                    'code' => 404,
+                ];
             }
 
             if($loan->remain_amount == 0){
-                return false;
+                return [
+                    'res' => [
+                        'success' => false,
+                        'message' => 'This loan has been paid',
+                    ],
+                    'code' => 400,
+                ];
             }
 
             //create payment
@@ -70,16 +82,58 @@ class PaymentService
             $updateLoan = $this->loanRepository->updateFirstByConditions($updateData, $where);
             if(!$updateLoan){
                 DB::rollback();
-                return false;
+                return [
+                    'res' => [
+                        'success' => false,
+                        'message' => 'Please try again',
+                    ],
+                    'code' => 400,
+                ];
             }
 
             DB::commit();
-            return $record;
+            return [
+                'res' => [
+                    'success' => true,
+                    'data' => $record,
+                ],
+                'code' => 200,
+            ];
         }
         catch(Exception $ex){
-            Log::error('err create payment '. $ex->getMessage());
             DB::rollback();
-            return false;
+            return [
+                'res' => [
+                    'success' => false,
+                    'message' => $ex->getMessage(),
+                ],
+                'code' => 500,
+            ];
+        }
+    }
+
+    /**
+     * read
+     */
+    public function read($id){
+        try {
+            $record = $this->paymentRepository->find($id);
+            return [
+                'res' => [
+                    'success' => true,
+                    'data' => $record,
+                ],
+                'code' => 200,
+            ];
+        }
+        catch (Exception $ex){
+            return [
+                'res' => [
+                    'success' => false,
+                    'message' => $ex->getMessage(),
+                ],
+                'code' => 500,
+            ];
         }
     }
 

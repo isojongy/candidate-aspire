@@ -26,14 +26,7 @@ class LoanController extends Controller
     public function postCreate(Request $request)
     {
         $result = $this->loanService->create($request->all());
-        if ($result) {
-            return response()->json([
-                'success' => true,
-                'data' => $result
-            ], 201);
-        } else {
-            return response()->json(['success' => false], 400);
-        }
+        return response()->json($result['res'], $result['code']);
     }
 
     /**
@@ -43,15 +36,7 @@ class LoanController extends Controller
     public function getRead($id)
     {
         $result = $this->loanService->read($id);
-        if ($result) {
-            return response()->json([
-                'success' => true,
-                'data' => $result
-            ], 200);
-        }
-        else{
-            return response()->json(['success' => false], 404);
-        }
+        return response()->json($result['res'], $result['code']);
     }
 
     /**
@@ -61,10 +46,7 @@ class LoanController extends Controller
     public function getList()
     {
         $result = $this->loanService->list();
-        return response()->json([
-            'success' => true,
-            'data' => $result
-        ], 200);
+        return response()->json($result['res'], $result['code']);
     }
 
 }
