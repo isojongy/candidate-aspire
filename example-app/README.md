@@ -29,4 +29,6 @@ make a repayment for a loan that’s already been repaid.
 
 ## Testing
 - create sample user
-`DB::table('users')->insert(['name'=>'Dev 1','email'=>'dev1@gmail.com','password'=>Hash::make('123456')])`
+`DB::table('users')->insert(['name'=>'Dev','email'=>'dev@gmail.com','password'=>Hash::make('123456')])`
+- run unit test
+`vendor\bin\phpunit`
