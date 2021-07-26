@@ -96,22 +96,4 @@ class LoanService
         }
     }
 
-    /**
-     * list
-     */
-    public function list(){
-        $userId = Auth::user()->id;
-        $conditions = [
-            'user_id' => $userId,
-        ];
-        $records = $this->loanRepository->getByConditions($conditions);
-        return [
-            'res' => [
-                'success' => true,
-                'data' => $records,
-            ],
-            'code' => 200,
-        ];
-    }
-
 }

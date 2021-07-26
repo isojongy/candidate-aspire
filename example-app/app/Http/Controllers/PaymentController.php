@@ -51,14 +51,4 @@ class PaymentController extends Controller
         return response()->json($result['res'], $result['code']);
     }
 
-    /**
-     * getList.
-     *
-     */
-    public function getList()
-    {
-        $result = $this->paymentService->list();
-        return response()->json($result['res'], $result['code']);
-    }
-
 }

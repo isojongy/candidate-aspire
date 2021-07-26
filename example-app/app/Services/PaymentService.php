@@ -146,12 +146,4 @@ class PaymentService
         }
     }
 
-    /**
-     * list
-     */
-    public function list(){
-        $userId = Auth::user()->id;
-        return $this->paymentRepository->list($userId);
-    }
-
 }
