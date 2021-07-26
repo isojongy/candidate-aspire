@@ -62,7 +62,7 @@ class PaymentService
             $days = 0;
             $now = Carbon::now();
             if ($now->gte($loan->end_date)) {
-                $days = Carbon::now()->diffInDays($loan->end_date);
+                $days = $now->diffInDays($loan->end_date);
             }
             // dd($days);
             $penaltyFee = $days * $loan->penalty_amount;
