@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use LoanService;
-use CommonHelper;
-use Illuminate\Support\Facades\View;
+use Validator;
 
 class LoanController extends Controller
 {
@@ -25,6 +24,21 @@ class LoanController extends Controller
      */
     public function postCreate(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'loan_plan_id' => 'required|integer',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'arrangement_fee' => 'required|integer',
+            'origin_amount' => 'required|integer',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors(),
+            ], 400);
+        }
+
         $result = $this->loanService->create($request->all());
         return response()->json($result['res'], $result['code']);
     }
@@ -36,16 +50,6 @@ class LoanController extends Controller
     public function getRead($id)
     {
         $result = $this->loanService->read($id);
-        return response()->json($result['res'], $result['code']);
-    }
-
-    /**
-     * getList.
-     *
-     */
-    public function getList()
-    {
-        $result = $this->loanService->list();
         return response()->json($result['res'], $result['code']);
     }
 

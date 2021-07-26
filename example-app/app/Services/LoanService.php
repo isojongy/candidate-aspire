@@ -57,7 +57,7 @@ class LoanService
                     'success' => true,
                     'data' => $record,
                 ],
-                'code' => 200,
+                'code' => 201,
             ];
         }
         catch(Exception $ex){

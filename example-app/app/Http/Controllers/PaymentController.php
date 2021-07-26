@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use PaymentService;
-use CommonHelper;
-use Illuminate\Support\Facades\View;
+use Validator;
 
 class PaymentController extends Controller
 {
@@ -25,6 +24,19 @@ class PaymentController extends Controller
      */
     public function postCreate(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'loan_id' => 'required|integer',
+            'amount' => 'required|integer',
+            'content' => 'nullable|string|max:500',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors(),
+            ], 400);
+        }
+
         $result = $this->paymentService->create($request->all());
         return response()->json($result['res'], $result['code']);
     }

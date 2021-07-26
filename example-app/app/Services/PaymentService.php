@@ -12,6 +12,7 @@ use Exception;
 use Auth;
 use DB;
 use Str;
+use Carbon\Carbon;
 
 /**
  */
@@ -57,9 +58,17 @@ class PaymentService
                 ];
             }
 
+            //check penaltyFee
+            $days = 0;
+            $now = Carbon::now();
+            if ($now->gte($loan->end_date)) {
+                $days = Carbon::now()->diffInDays($loan->end_date);
+            }
+            // dd($days);
+            $penaltyFee = $days * $loan->penalty_amount;
+
             //create payment
             $paidAmount = $loan->paid_amount + $request['amount'];
-            $penaltyFee = 1 * $loan->penalty_amount;
             $remainAmount = max($loan->remain_amount - $request['amount'] + $penaltyFee, 0);
 
             $request['ref_no'] = Str::upper(substr(md5(uniqid(mt_rand(), true)) , 0, 12));
@@ -97,7 +106,7 @@ class PaymentService
                     'success' => true,
                     'data' => $record,
                 ],
-                'code' => 200,
+                'code' => 201,
             ];
         }
         catch(Exception $ex){

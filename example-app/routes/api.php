@@ -30,15 +30,19 @@ Route::group([
         Route::get('me', 'AuthController@me');
     });
 
-    Route::group(['prefix' => 'loans'], function(){
-        Route::post('create', 'LoanController@postCreate');
-        Route::get('read/{id}', 'LoanController@getRead');
-        Route::get('list', 'LoanController@getList');
-    });
+    Route::group([
+        'middleware' => ['before' => 'jwt.auth']
+    ], function () {
+        Route::group(['prefix' => 'loans'], function(){
+            Route::post('create', 'LoanController@postCreate');
+            Route::get('read/{id}', 'LoanController@getRead');
+            Route::get('list', 'LoanController@getList');
+        });
 
-    Route::group(['prefix' => 'payments'], function(){
-        Route::post('create', 'PaymentController@postCreate');
-        Route::get('read/{id}', 'PaymentController@getRead');
-        Route::get('list', 'PaymentController@getList');
+        Route::group(['prefix' => 'payments'], function(){
+            Route::post('create', 'PaymentController@postCreate');
+            Route::get('read/{id}', 'PaymentController@getRead');
+            Route::get('list', 'PaymentController@getList');
+        });
     });
 });
